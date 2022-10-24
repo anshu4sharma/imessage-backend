@@ -1,9 +1,9 @@
 const express = require("express");
 const router = new express.Router();
 const Users = require("../model/UserSchema");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
-const saltround = 10 
+const saltround = 10;
 const transporter = nodemailer.createTransport({
   port: 465,
   host: "smtp.gmail.com",
@@ -26,13 +26,13 @@ router.delete("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   const random = Math.floor(Math.random() * 9000 + 1000);
-  // let salt = await bcrypt.genSalt(saltround)
-  // let hash_password = await bcrypt.hash(req.body.password,salt)
+  let salt = await bcrypt.genSalt(saltround);
+  let hash_password = await bcrypt.hash(req.body.password, salt);
   let user = {
     name: req.body.name,
     email: req.body.email,
     isVerified: req.body.isVerified,
-    password:req.body.password,
+    password: hash_password,
     otp: random,
   };
   const mailData = {
@@ -67,7 +67,6 @@ router.post("/verify", async (req, res) => {
     let IsValid = await Users.findOne({
       $and: [{ email: req.body.email }, { otp: req.body.otp }],
     });
-    console.log(IsValid);
     if (IsValid) {
       await Users.findOneAndUpdate(
         { email: req.body.email },
@@ -79,6 +78,25 @@ router.post("/verify", async (req, res) => {
       await res.send("Verified");
     } else {
       res.send("wrong otp");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      res.send("please fill the data");
+    }
+    let IsValidme = await Users.findOne({ email: email });
+    if (IsValidme) {
+      let isMatch = await bcrypt.compare(password, IsValidme.password);
+      if (isMatch) {
+        await res.send("Login Success");
+      } else {
+        res.send("wrong otp");
+      }
     }
   } catch (error) {
     console.log(error);
