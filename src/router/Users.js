@@ -34,7 +34,6 @@ router.post("/", async (req, res) => {
   let user = {
     name: req.body.name,
     email: req.body.email,
-    isVerified: req.body.isVerified,
     password: hash_password,
     otp: random,
   };
