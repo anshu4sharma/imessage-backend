@@ -8,7 +8,7 @@ const UserSchema = new mongoose.Schema({
   },
   email: {
     required: true,
-    unique:true,
+    unique: true,
     type: String,
     validate(data) {
       if (!validator.isEmail(data)) {
@@ -16,17 +16,19 @@ const UserSchema = new mongoose.Schema({
       }
     },
   },
-  phone: {
-    unique: [true, "Phone no. is already present"],
+  password: {
     required: true,
-    type: Number,
-    minlength: 10,
-    maxlenth: 10,
-  },
-  address: {
-    required: true,
+    minlength: 5,
     type: String,
   },
+  isVerified: {
+    required: true,
+    type: Boolean,
+  },
+  otp:{
+    required:true,
+    type:Number
+  }
 });
 
 //  here we are creating model / collection

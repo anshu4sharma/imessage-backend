@@ -1,53 +1,88 @@
 const express = require("express");
 const router = new express.Router();
 const Users = require("../model/UserSchema");
+const bcrypt = require('bcrypt');
+const nodemailer = require("nodemailer");
+const saltround = 10 
+const transporter = nodemailer.createTransport({
+  port: 465,
+  host: "smtp.gmail.com",
+  auth: {
+    user: "anshusharma.yashvi@gmail.com",
+    pass: "mjrdxeztapenmaap",
+  },
+  secure: true, // upgrades later with STARTTLS -- change this based on the PORT
+});
+
 router.get("/", async (req, res) => {
   const data = await Users.find();
   res.send(data);
 });
-router.get("/:id", async (req, res) => {
-  const _id = req.params.id;
-  const data = await Users.findById({ _id });
-  res.send(data);
+
+router.delete("/:id", async (req, res) => {
+  let Del = await Users.findByIdAndDelete(req.params["id"]);
+  await res.send(Del);
 });
 
 router.post("/", async (req, res) => {
-  const user = new Users(req.body);
-  const IsEmail = await Users.findOne({ email: req.body.email });
-  const IsPhone = await Users.findOne({ phone: req.body.phone });
-  if (IsPhone || IsEmail) {
-    res.status(404).send("User Already Exists!");
-  } else {
-    user
-      .save()
-      .then(() => {
-        res.send(user);
-      })
-      .catch((err) => {
-        res.send(err);
+  const random = Math.floor(Math.random() * 9000 + 1000);
+  // let salt = await bcrypt.genSalt(saltround)
+  // let hash_password = await bcrypt.hash(req.body.password,salt)
+  let user = {
+    name: req.body.name,
+    email: req.body.email,
+    isVerified: req.body.isVerified,
+    password:req.body.password,
+    otp: random,
+  };
+  const mailData = {
+    from: "anshusharma.yashvi@gmail.com",
+    to: req.body.email,
+    subject: "Verifcation code",
+    text: null,
+    html: `<span>Your Verification code is ${random}</span>`,
+  };
+  let userInfo = new Users(user);
+  let IsEmail = await Users.findOne({ email: req.body.email });
+  try {
+    if (IsEmail) {
+      res.status(404).send("User Already Exists!");
+    } else {
+      await userInfo.save();
+      transporter.sendMail(mailData, (error, info) => {
+        if (error) {
+          return console.log(error);
+        }
+        res.status(200).send({ message: "Mail send" });
       });
+      res.send(userInfo);
+    }
+  } catch (error) {
+    console.log(error);
   }
 });
-router.patch("/:id", (req, res) => {
-  const _id = req.params.id;
-  const data = Users.findByIdAndUpdate({ _id }, req.body)
-    .then(() => {
-      res.send(data);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
 
-router.delete("/:id", (req, res) => {
-  const _id = req.params.id;
-  const data = Users.findByIdAndDelete({ _id }, req.body)
-    .then(() => {
-      res.send(data);
-    })
-    .catch((err) => {
-      console.log(err);
+router.post("/verify", async (req, res) => {
+  try {
+    let IsValid = await Users.findOne({
+      $and: [{ email: req.body.email }, { otp: req.body.otp }],
     });
+    console.log(IsValid);
+    if (IsValid) {
+      await Users.findOneAndUpdate(
+        { email: req.body.email },
+        { isVerified: true },
+        {
+          returnOriginal: false,
+        }
+      );
+      await res.send("Verified");
+    } else {
+      res.send("wrong otp");
+    }
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 module.exports = router;
