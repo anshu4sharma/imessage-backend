@@ -48,7 +48,7 @@ router.post("/", async (req, res) => {
   let IsEmail = await Users.findOne({ email: req.body.email });
   try {
     if (IsEmail) {
-      res.status(404).send("User Already Exists!");
+      res.send("User Already Exists!");
     } else {
       await userInfo.save();
       transporter.sendMail(mailData, (error, info) => {
@@ -121,7 +121,7 @@ router.post("/getuser", fetchuser, async (req, res) => {
     res.send(user);
   } catch (error) {
     console.log(error);
-    res.status(500).send("Server error");
+    res.status(401).send("Server error");
   }
 });
 
