@@ -23,12 +23,16 @@ const UserSchema = new mongoose.Schema({
   },
   isVerified: {
     type: Boolean,
-    default: false
+    default: false,
   },
-  otp:{
-    required:true,
-    type:Number
-  }
+  otp: {
+    required: true,
+    type: Number,
+  },
+  userCreated: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 //  here we are creating model / collection
