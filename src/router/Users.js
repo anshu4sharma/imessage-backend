@@ -94,10 +94,10 @@ router.post("/login", async (req, res) => {
       res.send("please fill the data");
     }
     let IsValidme = await Users.findOne({ email: email });
-    let data = {
-      id: IsValidme.id,
-    };
     if (IsValidme) {
+      let data = {
+        id: IsValidme.id,
+      };
       let isMatch = await bcrypt.compare(password, IsValidme.password);
       if (isMatch) {
         let authToken = jwt.sign(data, JWT_SECRET);
