@@ -7,7 +7,7 @@ app.use(cors())
 require("./src/db/conn");
 const router = require("./src/router/Users");
 app.get("/", (req, res) => {
-  res.send("hello from anshu ");
+  res.send("hello from anshu sharam ");
 });
 
 app.use("/users", router);
