@@ -17,12 +17,12 @@ const transporter = nodemailer.createTransport({
   secure: true, // upgrades later with STARTTLS -- change this based on the PORT
 });
 
-router.get("/", async (req, res) => {
+router.get("/showall", async (req, res) => {
   const data = await Users.find();
   res.send(data);
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/pop/:id", async (req, res) => {
   let Del = await Users.findByIdAndDelete(req.params["id"]);
   await res.send(Del);
 });
@@ -94,19 +94,19 @@ router.post("/login", async (req, res) => {
       res.send("please fill the data");
     }
     let IsValidme = await Users.findOne({ email: email });
-    if (IsValidme) {
+    if (IsValidme.isVerified) {
       let data = {
         id: IsValidme.id,
       };
       let isMatch = await bcrypt.compare(password, IsValidme.password);
       if (isMatch) {
         let authToken = jwt.sign(data, JWT_SECRET);
-        res.json({ authToken });
+        res.status(200).json({ authToken });
       } else {
-        res.send("invalid credential");
+        res.status(403).send("invalid credential");
       }
     } else {
-      res.send("invalid credentials!!");
+      res.status(401).send("not verified");
     }
   } catch (error) {
     console.log(error);
@@ -117,7 +117,7 @@ router.post("/login", async (req, res) => {
 router.post("/getuser", fetchuser, async (req, res) => {
   try {
     const userid = req.id;
-    const user = await Users.findById(userid).select("-password,-otp");
+    const user = await Users.findById(userid).select("name");
     res.send(user);
   } catch (error) {
     console.log(error);
