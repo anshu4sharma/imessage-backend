@@ -29,11 +29,7 @@ const UserSchema = new mongoose.Schema({
     required: true,
     type: Number,
   },
-  userCreated: {
-    type: Date,
-    default: Date.now,
-  },
-});
+},{timestamps:true});
 
 //  here we are creating model / collection
 const Users = new mongoose.model("Users", UserSchema);
