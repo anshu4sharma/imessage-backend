@@ -24,7 +24,7 @@ router.get("/showall", async (req, res) => {
 
 router.delete("/pop/:id", async (req, res) => {
   let Del = await Users.findByIdAndDelete(req.params["id"]);
-  await res.send(Del);
+   res.send(Del);
 });
 
 router.post("/", async (req, res) => {
@@ -53,10 +53,11 @@ router.post("/", async (req, res) => {
       await userInfo.save();
       transporter.sendMail(mailData, (error, info) => {
         if (error) {
-          return console.log(error);
+          res.status(500).send("Server error");
+        }else{
+          res.send("account created successfully");
         }
       });
-      res.send("account created successfully");
     }
   } catch (error) {
     console.log(error);
@@ -77,7 +78,7 @@ router.post("/verify", async (req, res) => {
           returnOriginal: false,
         }
       );
-      await res.send("Verified");
+       res.send("Verified");
     } else {
       res.send("wrong otp");
     }
