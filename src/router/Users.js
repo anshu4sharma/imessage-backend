@@ -24,11 +24,12 @@ router.get("/showall", async (req, res) => {
 
 router.delete("/pop/:id", async (req, res) => {
   let Del = await Users.findByIdAndDelete(req.params["id"]);
-   res.send(Del);
+  res.send(Del);
 });
 
 router.post("/", async (req, res) => {
   const random = Math.floor(Math.random() * 9000 + 1000);
+  const merchantId = Math.floor(Math.random() * 900000 + 100000);
   let salt = await bcrypt.genSalt(saltround);
   let hash_password = await bcrypt.hash(req.body.password, salt);
   let user = {
@@ -48,14 +49,13 @@ router.post("/", async (req, res) => {
   let IsEmail = await Users.findOne({ email: req.body.email });
   try {
     if (IsEmail) {
-      res.send("User Already Exists!");
+      res.status(401).send("User Already Exists!");
     } else {
       await userInfo.save();
+      res.json({ result: "success", merchantId });
       transporter.sendMail(mailData, (error, info) => {
         if (error) {
           res.status(500).send("Server error");
-        }else{
-          res.send("account created successfully");
         }
       });
     }
@@ -78,7 +78,7 @@ router.post("/verify", async (req, res) => {
           returnOriginal: false,
         }
       );
-       res.send("Verified");
+      res.send("Verified");
     } else {
       res.send("wrong otp");
     }
