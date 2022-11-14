@@ -6,10 +6,14 @@ const responseTime = require("response-time");
 var compression = require("compression");
 const UserRoute = require("./src/router/Users");
 const UpiRoute = require("./src/router/UpiLink");
+var cookieParser = require("cookie-parser");
+app.use(cookieParser());
+
 require("./src/db/conn");
 app.use(compression());
 app.use(responseTime());
 app.use(express.json());
+
 app.use(
   cors({
     origin: [
@@ -17,6 +21,8 @@ app.use(
       "https://anshu-chat.vercel.app",
       "https://imessage.pages.dev",
     ],
+    credentials: true, // is neccessary for setting cookie
+    exposedHeaders: ["set-cookie"], // is neccessary for setting cookie
   })
 );
 app.get("/", (req, res) => {

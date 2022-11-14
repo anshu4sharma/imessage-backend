@@ -4,6 +4,7 @@ const Users = require("../model/UserSchema");
 const bcrypt = require("bcrypt");
 const JWT_SECRET = "mynameisanshu$harma";
 const jwt = require("jsonwebtoken");
+const authUser = require("../middleware/authUser");
 const fetchuser = require("../middleware/fetchuser");
 const nodemailer = require("nodemailer");
 const saltround = 10;
@@ -37,6 +38,7 @@ router.post("/", async (req, res) => {
     email: req.body.email,
     password: hash_password,
     otp: random,
+    merchantId: merchantId,
   };
   const mailData = {
     from: "anshusharma.yashvi@gmail.com",
@@ -78,9 +80,9 @@ router.post("/verify", async (req, res) => {
           returnOriginal: false,
         }
       );
-      res.send("Verified");
+      res.status(200).send("Verified");
     } else {
-      res.send("wrong otp");
+      res.status(401).send("wrong otp");
     }
   } catch (error) {
     console.log(error);
@@ -92,7 +94,7 @@ router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      res.send("please fill the data");
+      res.status(403).send("please fill the data");
     }
     let IsValidme = await Users.findOne({ email: email });
     if (IsValidme.isVerified) {
@@ -102,7 +104,10 @@ router.post("/login", async (req, res) => {
       let isMatch = await bcrypt.compare(password, IsValidme.password);
       if (isMatch) {
         let authToken = jwt.sign(data, JWT_SECRET);
-        res.status(200).json({ authToken });
+        res.cookie("token", authToken, {
+          expires: new Date(Date.now() + 999999999),
+        });
+        res.status(200).send({ authToken });
       } else {
         res.status(403).send("invalid credential");
       }
@@ -110,8 +115,8 @@ router.post("/login", async (req, res) => {
       res.status(401).send("not verified");
     }
   } catch (error) {
-    console.log(error);
-    res.status(500).send("Server error");
+    res.clearCookie("token");
+    res.status(500).send(error);
   }
 });
 
@@ -119,6 +124,17 @@ router.post("/getuser", fetchuser, async (req, res) => {
   try {
     const userid = req.id;
     const user = await Users.findById(userid).select("name");
+    res.send(user);
+  } catch (error) {
+    console.log(error);
+    res.status(401).send("Server error");
+  }
+});
+
+router.post("/getmerchantId", authUser, async (req, res) => {
+  try {
+    const userid = req.id;
+    const user = await Users.findById(userid).select("merchantId");
     res.send(user);
   } catch (error) {
     console.log(error);

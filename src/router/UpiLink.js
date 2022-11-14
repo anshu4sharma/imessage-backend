@@ -2,11 +2,28 @@ const express = require("express");
 const router = new express.Router();
 const UpiLink = require("../model/UpiSchema");
 const { randomUUID } = require("crypto");
+const authUser = require("../middleware/authUser");
 
-router.get("/links/:id", async (req, res) => {
-  let Links = await UpiLink.find({ merchantId: { $eq: req.params["id"] } });
-  res.send(Links);
+router.get("/all/:id", async (req, res) => {
+  //  fetch all link of a merchant by his id 
+  try {
+    let Links = await UpiLink.find({ merchantId: { $eq: req.params["id"] } });
+    res.send(Links);
+  } catch (error) {
+    res.status(500).send(error);
+  }
 });
+
+router.get("/uid/:id", async (req, res) => {
+  //  fetch all link of a merchant by his id 
+  try {
+    let link = await UpiLink.find({ uid: { $eq: req.params["id"] } });
+    res.send(link);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 router.post("/", async (req, res) => {
   let { name, description, upiId, merchantId, amount } = req.body;
   try {
@@ -21,16 +38,20 @@ router.post("/", async (req, res) => {
     };
     let upi_Link = new UpiLink(user);
     await upi_Link.save();
-    res.send({ success: true, uid: uid });
+    res.status(200).send({ success: true, uid: uid });
   } catch (error) {
     console.log(error);
-    res.status(500).send("Server error");
+    res.status(500).send(error);
   }
 });
 
 router.get("/showall", async (req, res) => {
-  const data = await UpiLink.find();
-  res.send(data);
+  try {
+    const data = await UpiLink.find();
+    res.status(200).send(data);
+  } catch (error) {
+    res.status(500).send(error);
+  }
 });
 
 router.delete("/deleteAll/:id", async (req, res) => {
@@ -39,8 +60,12 @@ router.delete("/deleteAll/:id", async (req, res) => {
 });
 
 router.delete("/delete/:id", async (req, res) => {
-  let Del = await UpiLink.deleteOne({ uid: { $eq: req.params["id"] } });
-  res.send(Del);
+  try {
+    let Del = await UpiLink.deleteOne({ uid: { $eq: req.params["id"] } });
+    res.send(Del);
+  } catch (error) {
+    res.status(500).send(error);
+  }
 });
 
 module.exports = router;
