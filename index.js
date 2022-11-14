@@ -20,6 +20,7 @@ app.use(
       "http://localhost:3000",
       "https://anshu-chat.vercel.app",
       "https://imessage.pages.dev",
+      "https://upipayy.vercel.app",
     ],
     credentials: true, // is neccessary for setting cookie
     exposedHeaders: ["set-cookie"], // is neccessary for setting cookie
