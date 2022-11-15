@@ -106,6 +106,7 @@ router.post("/login", async (req, res) => {
         let authToken = jwt.sign(data, JWT_SECRET);
         res.cookie("token", authToken, {
           expires: new Date(Date.now() + 999999999),
+          sameSite: 'none', secure: true
         });
         res.status(200).send({ authToken });
       } else {
