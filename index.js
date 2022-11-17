@@ -20,6 +20,7 @@ app.use(
     exposedHeaders: ["set-cookie"], // is neccessary for setting cookie
   })
 );
+app.set("trust proxy")
 
 app.get("/", (req, res) => {
   res.send(" im anshu sharma ....");
