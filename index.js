@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 const UserRoute = require("./src/router/Users");
 const UpiRoute = require("./src/router/UpiLink");
 var cookieParser = require("cookie-parser");
@@ -20,14 +20,11 @@ app.use(
     exposedHeaders: ["set-cookie"], // is neccessary for setting cookie
   })
 );
-app.use(function(req, res, next) {  
-  res.header('Access-Control-Allow-Origin', req.headers.origin);
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-}); 
+
 app.get("/", (req, res) => {
   res.send(" im anshu sharma ....");
 });
+
 app.use("/users", UserRoute);
 app.use("/genlink", UpiRoute);
 app.listen(PORT, () => {
