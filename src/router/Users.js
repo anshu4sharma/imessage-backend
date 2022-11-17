@@ -106,7 +106,7 @@ router.post("/login", async (req, res) => {
         let authToken = jwt.sign(data, JWT_SECRET);
         res.cookie("token", authToken, {
           maxAge: 900000,
-          httpOnly: false, secure: true,
+          httpOnly: false, secure: false,
         });
         res.status(200).send({ authToken });
       } else {
