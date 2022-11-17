@@ -7,22 +7,11 @@ var compression = require("compression");
 const UserRoute = require("./src/router/Users");
 const UpiRoute = require("./src/router/UpiLink");
 var cookieParser = require("cookie-parser");
-var session = require('express-session')
-
 app.use(cookieParser());
-app.set('trust proxy', 1) // trust first proxy
-app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: true }
-}))
-
 require("./src/db/conn");
 app.use(compression());
 app.use(responseTime());
 app.use(express.json());
-
 app.use(
   cors({
     origin: [
