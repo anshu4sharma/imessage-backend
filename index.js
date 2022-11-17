@@ -26,7 +26,7 @@ app.use(function(req, res, next) {
   next();
 }); 
 app.get("/", (req, res) => {
-  res.send("hello im anshu sharma ....");
+  res.send(" im anshu sharma ....");
 });
 app.use("/users", UserRoute);
 app.use("/genlink", UpiRoute);

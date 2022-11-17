@@ -105,7 +105,8 @@ router.post("/login", async (req, res) => {
       if (isMatch) {
         let authToken = jwt.sign(data, JWT_SECRET);
         res.cookie("token", authToken, {
-          maxAge: 900000,sameSite:false
+          maxAge: 900000,sameSite:true,
+          domain:"https://upipayy.vercel.app"
         });
         res.status(200).send({ authToken });
       } else {
