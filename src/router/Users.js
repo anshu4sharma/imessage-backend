@@ -106,14 +106,8 @@ router.post("/login", async (req, res) => {
         let authToken = jwt.sign(data, JWT_SECRET);
         res.cookie("token", authToken, {
           expires: new Date(Date.now() + 999999999),
-          resave: false,
-          saveUninitialized: true,
-          proxy: true, // Required for Heroku & Digital Ocean (regarding X-Forwarded-For)
-          name: 'MyCoolWebAppCookieName', // This needs to be unique per-host.
           cookie: {
-            secure: true, // required for cookies to work on HTTPS
-            httpOnly: false,
-            sameSite: 'none'
+            httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 48, sameSite: 'none', name: 'MyCoolWebAppCookieName', // This needs to be unique per-host.
           }
         });
         res.status(200).send({ authToken });

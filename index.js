@@ -8,6 +8,7 @@ const UserRoute = require("./src/router/Users");
 const UpiRoute = require("./src/router/UpiLink");
 var cookieParser = require("cookie-parser");
 app.use(cookieParser());
+app.enable('trust proxy')
 
 require("./src/db/conn");
 app.use(compression());
