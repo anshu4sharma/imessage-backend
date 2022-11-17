@@ -104,9 +104,6 @@ router.post("/login", async (req, res) => {
       let isMatch = await bcrypt.compare(password, IsValidme.password);
       if (isMatch) {
         let authToken = jwt.sign(data, JWT_SECRET);
-        res.cookie("token", authToken, {
-          maxAge: 900000,domain:"https://upipayy.vercel.app"
-        });
         res.status(200).send({ authToken });
       } else {
         res.status(403).send("invalid credential");

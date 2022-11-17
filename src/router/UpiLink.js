@@ -2,7 +2,6 @@ const express = require("express");
 const router = new express.Router();
 const UpiLink = require("../model/UpiSchema");
 const { randomUUID } = require("crypto");
-const authUser = require("../middleware/authUser");
 
 router.get("/all/:id", async (req, res) => {
   //  fetch all link of a merchant by his id 
