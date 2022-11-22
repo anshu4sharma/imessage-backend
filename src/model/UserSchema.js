@@ -30,9 +30,6 @@ const UserSchema = new mongoose.Schema(
       required: true,
       type: Number,
     },
-    merchantId: {
-      type: Number,
-    },
   },
   { timestamps: true }
 );

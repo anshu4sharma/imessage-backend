@@ -1,6 +1,7 @@
 const express = require("express");
 const router = new express.Router();
 const UpiLink = require("../model/UpiSchema");
+const QrCode = require("../model/QrCode");
 const { randomUUID } = require("crypto");
 
 router.get("/all/:id", async (req, res) => {
@@ -40,6 +41,26 @@ router.post("/", async (req, res) => {
     res.status(200).send({ success: true, uid: uid });
   } catch (error) {
     console.log(error);
+    res.status(500).send(error);
+  }
+});
+router.post("/saveqrcode", async (req, res) => {
+  let { upiId, merchantId } = req.body;
+  try {
+    let qrCode = new QrCode({ upiId, merchantId });
+    await qrCode.save();
+    res.status(200).send({ success: true });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+});
+
+router.get("/getqrcode/:id", async (req, res) => {
+  try {
+    let qrCode = await QrCode.find({ merchantId: { $eq: req.params["id"] } });
+    res.status(200).send(qrCode);
+  } catch (error) {
     res.status(500).send(error);
   }
 });
