@@ -14,6 +14,7 @@ app.use(
       "https://imessage.pages.dev",
       "https://upipayy.vercel.app",
       "https://upipay.ml",
+      "https://www.upipay.ml",
     ]
   })
 );
