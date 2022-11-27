@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 
 const fetchuser = (req, res, next) => {
   //  get the user from the jwt and add id to req object
-  const token = req.header("auth-token");
+  const token = req.headers["auth-token"];
   try {
     if (!token) {
       res.status(401).send("Access denied");

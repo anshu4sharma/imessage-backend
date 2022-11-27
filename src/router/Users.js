@@ -117,10 +117,10 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/getuser", fetchuser, async (req, res) => {
+router.get("/getuser", fetchuser, async (req, res) => {
   try {
     const userid = req.id;
-    const user = await Users.findById(userid).select("name");
+    const user = await Users.findById(userid)
     res.send(user);
   } catch (error) {
     console.log(error);
