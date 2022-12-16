@@ -5,17 +5,26 @@ const QrCode = require("../model/QrCode");
 const { randomUUID } = require("crypto");
 
 router.get("/all/:id", async (req, res) => {
-  //  fetch all link of a merchant by his id 
+  //  fetch all link of that merchant by using id
   try {
-    let Links = await UpiLink.find({ merchantId: { $eq: req.params["id"] } });
-    res.send(Links);
+    const { page = 1, limit = 10 } = req.query;
+    let pagecount = parseInt(page);
+    let limitcount = parseInt(limit);
+    let Links = await UpiLink.find({ merchantId: { $eq: req.params["id"] } })
+      .limit(limit * 1)
+      .skip((page - 1) * limit);
+    let total = await UpiLink.countDocuments({
+      merchantId: { $eq: req.params["id"] },
+    });
+    let totalPages = Math.ceil(total/limit)
+    res.json({ page: pagecount, limit: limitcount,totalPages, totalLinks:total, Links });
   } catch (error) {
     res.status(500).send(error);
   }
 });
 
 router.get("/uid/:id", async (req, res) => {
-  //  fetch all link of a merchant by his id 
+  //  fetch a specific link with using id
   try {
     let link = await UpiLink.find({ uid: { $eq: req.params["id"] } });
     res.send(link);
@@ -65,14 +74,16 @@ router.get("/getqrcode/:id", async (req, res) => {
   }
 });
 
-router.get("/showall", async (req, res) => {
-  try {
-    const data = await UpiLink.find();
-    res.status(200).send(data);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+// this will show all user data
+
+// router.get("/showall", async (req, res) => {
+//   try {
+//     const data = await UpiLink.find();
+//     res.status(200).send(data);
+//   } catch (error) {
+//     res.status(500).send(error);
+//   }
+// });
 
 router.delete("/deleteAll/:id", async (req, res) => {
   let Del = await UpiLink.deleteMany({ merchantId: { $eq: req.params["id"] } });
