@@ -14,6 +14,7 @@ app.use(
       "https://anshu-chat.vercel.app",
       "https://imessage.pages.dev",
       "https://upipayy.vercel.app",
+      "https://upipay.anshusharma.me",
     ]
   })
 );
