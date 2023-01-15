@@ -97,22 +97,25 @@ router.post("/login", async (req, res) => {
       res.status(403).send("please fill the data");
     }
     let IsValidme = await Users.findOne({ email: email });
-    if (IsValidme.isVerified) {
-      let data = {
-        id: IsValidme.id,
-      };
-      let isMatch = await bcrypt.compare(password, IsValidme.password);
-      if (isMatch) {
-        let authToken = jwt.sign(data, JWT_SECRET);
-        res.status(200).send({ authToken });
-      } else {
-        res.status(403).send("invalid credential");
-      }
+    if (!IsValidme) {
+      res.status(403).send("invalid credential");
     } else {
-      res.status(401).send("not verified");
+      if (IsValidme.isVerified) {
+        let data = {
+          id: IsValidme.id,
+        };
+        let isMatch = await bcrypt.compare(password, IsValidme.password);
+        if (isMatch) {
+          let authToken = jwt.sign(data, JWT_SECRET);
+          res.status(200).send({ authToken });
+        } else {
+          res.status(403).send("invalid credential");
+        }
+      } else {
+        res.status(401).send("not verified");
+      }
     }
   } catch (error) {
-    res.clearCookie("token");
     res.status(500).send(error);
   }
 });
@@ -120,8 +123,8 @@ router.post("/login", async (req, res) => {
 router.get("/getuser", fetchuser, async (req, res) => {
   try {
     const userid = req.id;
-    const user = await Users.findById(userid)
-    res.send(user);
+    const user = await Users.findById(userid);
+    res.status(200).send(user);
   } catch (error) {
     console.log(error);
     res.status(401).send("Server error");
