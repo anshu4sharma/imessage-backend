@@ -29,6 +29,8 @@ app.get("/test", function (req, res) {
   console.log("Cookies: ", req.cookies);
   res.cookie("cokkieName", "sharma ji", {
     maxAge: 900000,
+    httpOnly: true,
+    sameSite: 'none',
   });
   res.json([{ name: "anshu" }, { name: "shjarma" }]);
 });
