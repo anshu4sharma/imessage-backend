@@ -30,7 +30,8 @@ app.get("/test", function (req, res) {
   res.cookie("cokkieName", "sharma ji", {
     maxAge: 900000,
     httpOnly: true,
-    sameSite: 'none',
+    sameSite: "none",
+    secure: true,
   });
   res.json([{ name: "anshu" }, { name: "shjarma" }]);
 });
