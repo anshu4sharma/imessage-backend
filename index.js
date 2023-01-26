@@ -19,16 +19,19 @@ app.use(
       "https://upipayy.vercel.app",
       "https://upipay.anshusharma.me",
       "https://chat.anshusharma.me",
-      "https://nextjs-typescript-template-production.up.railway.app"
+      "https://nextjs-typescript-template-production.up.railway.app",
     ],
     credentials: "true",
   })
 );
 app.get("/test", function (req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "https://nextjs-typescript-template-production.up.railway.app");
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "https://nextjs-typescript-template-production.up.railway.app"
+  );
   res.setHeader("Access-Control-Allow-Credentials", true);
   console.log("Cookies: ", req.cookies);
-  res.cookie("cokkieName", "sharma ji", {
+  res.cookie("cokkieName", Math.random()*1000, {
     maxAge: 900000,
     httpOnly: true,
     sameSite: "none",
