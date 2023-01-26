@@ -30,7 +30,6 @@ router.delete("/pop/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   const random = Math.floor(Math.random() * 9000 + 1000);
-  const merchantId = Math.floor(Math.random() * 900000 + 100000);
   let salt = await bcrypt.genSalt(saltround);
   let hash_password = await bcrypt.hash(req.body.password, salt);
   let user = {
@@ -38,7 +37,6 @@ router.post("/", async (req, res) => {
     email: req.body.email,
     password: hash_password,
     otp: random,
-    merchantId: merchantId,
   };
   const mailData = {
     from: "anshusharma.yashvi@gmail.com",
@@ -54,7 +52,7 @@ router.post("/", async (req, res) => {
       res.status(401).send("User Already Exists!");
     } else {
       await userInfo.save();
-      res.json({ result: "success", merchantId });
+      res.json({ result: "success" });
       transporter.sendMail(mailData, (error, info) => {
         if (error) {
           res.status(500).send("Server error");
@@ -62,7 +60,6 @@ router.post("/", async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error);
     res.status(500).send("Server error");
   }
 });
@@ -125,17 +122,6 @@ router.get("/getuser", fetchuser, async (req, res) => {
     const userid = req.id;
     const user = await Users.findById(userid);
     res.status(200).send(user);
-  } catch (error) {
-    console.log(error);
-    res.status(401).send("Server error");
-  }
-});
-
-router.post("/getmerchantId", authUser, async (req, res) => {
-  try {
-    const userid = req.id;
-    const user = await Users.findById(userid).select("merchantId");
-    res.send(user);
   } catch (error) {
     console.log(error);
     res.status(401).send("Server error");
