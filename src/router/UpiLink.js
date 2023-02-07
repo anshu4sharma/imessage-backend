@@ -76,14 +76,14 @@ router.get("/getqrcode/:id", async (req, res) => {
 
 // this will show all user data
 
-// router.get("/showall", async (req, res) => {
-//   try {
-//     const data = await UpiLink.find();
-//     res.status(200).send(data);
-//   } catch (error) {
-//     res.status(500).send(error);
-//   }
-// });
+router.get("/showall", async (req, res) => {
+  try {
+    const data = await UpiLink.find();
+    res.status(200).send(data);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
 
 router.delete("/deleteAll/:id", async (req, res) => {
   let Del = await UpiLink.deleteMany({ merchantId: { $eq: req.params["id"] } });

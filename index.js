@@ -27,7 +27,7 @@ app.use(
 app.get("/test", function (req, res) {
   res.setHeader(
     "Access-Control-Allow-Origin",
-    "https://nextjs-typescript-template-production.up.railway.app"
+     "http://localhost:3000",
   );
   res.setHeader("Access-Control-Allow-Credentials", true);
   console.log("Cookies: ", req.cookies);
