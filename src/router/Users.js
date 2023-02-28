@@ -100,6 +100,7 @@ router.post("/login", async (req, res) => {
       if (IsValidme.isVerified) {
         let data = {
           id: IsValidme.id,
+          name: IsValidme.name
         };
         let isMatch = await bcrypt.compare(password, IsValidme.password);
         if (isMatch) {

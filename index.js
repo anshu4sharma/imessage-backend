@@ -19,7 +19,6 @@ app.use(
       "https://upipayy.vercel.app",
       "https://upipay.anshusharma.me",
       "https://chat.anshusharma.me",
-      "https://nextjs-typescript-template-production.up.railway.app",
     ],
     credentials: "true",
   })
@@ -27,17 +26,17 @@ app.use(
 app.get("/test", function (req, res) {
   res.setHeader(
     "Access-Control-Allow-Origin",
-     "http://localhost:3000",
+    "http://localhost:3000",
   );
   res.setHeader("Access-Control-Allow-Credentials", true);
   console.log("Cookies: ", req.cookies);
-  res.cookie("cokkieName", Math.random()*1000, {
+  res.cookie("cokkieName", Math.random() * 1000, {
     maxAge: 900000,
     httpOnly: true,
     sameSite: "none",
     secure: true,
   });
-  res.json([{ name: "anshu" }, { name: "shjarma" }]);
+  res.json([{ name: "anshu" }, { name: "sharma" }]);
 });
 
 app.use("/upi", UpiValidateRouter);
