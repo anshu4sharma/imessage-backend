@@ -4,16 +4,16 @@ const Users = require("../model/UserSchema");
 const bcrypt = require("bcrypt");
 const JWT_SECRET = "mynameisanshu$harma";
 const jwt = require("jsonwebtoken");
-const authUser = require("../middleware/authUser");
 const fetchuser = require("../middleware/fetchuser");
 const nodemailer = require("nodemailer");
+require("dotenv").config();
 const saltround = 10;
 const transporter = nodemailer.createTransport({
   port: 465,
   host: "smtp.gmail.com",
   auth: {
-    user: "anshusharma.yashvi@gmail.com",
-    pass: "mjrdxeztapenmaap",
+    user: process.env.EMAIL,
+    pass:  process.env.PASSWORD,
   },
   secure: true, // upgrades later with STARTTLS -- change this based on the PORT
 });
@@ -39,7 +39,7 @@ router.post("/", async (req, res) => {
     otp: random,
   };
   const mailData = {
-    from: "anshusharma.yashvi@gmail.com",
+    from: process.env.EMAIL,
     to: req.body.email,
     subject: "Verifcation code",
     text: null,
