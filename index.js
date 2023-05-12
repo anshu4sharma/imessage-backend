@@ -9,9 +9,7 @@ const UpiRoute = require("./src/router/UpiLink");
 const Msg = require("./src/model/message");
 const RoomMsgs = require("./src/model/roomMessages");
 require("./src/db/conn");
-
 dotenv.config();
-
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
