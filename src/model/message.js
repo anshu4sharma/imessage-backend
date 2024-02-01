@@ -6,7 +6,11 @@ const msgschema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  id:String
+  id: String,
+  receiverId: {
+    type: String,
+    default: "",
+  },
 });
 
 const msgs = mongoose.model("Msg", msgschema);
